@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101323">
+  <meta name="description" content="ماذا لو؟ — لعبة أسئلة ومواقف خيالية للعب مع الأصدقاء.">
+  <title>ماذا لو؟ | لعبة الأسئلة</title>
+  <style>
+    :root{--bg:#101323;--panel:#191e35;--gold:#f4c96b;--text:#f8f7f2;--muted:#b9bfd4;--purple:#7867e8}
+    *{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(circle at 50% 0,#29244e 0,#101323 52%);font-family:Tahoma,Arial,sans-serif;color:var(--text);display:flex;justify-content:center;align-items:center;padding:22px}
+    .app{width:min(760px,100%)} header{text-align:center;margin-bottom:24px}
+    .logo{display:inline-grid;place-items:center;width:70px;height:70px;border:2px solid var(--gold);border-radius:22px;color:var(--gold);font-size:35px;box-shadow:0 0 30px #f4c96b22}
+    h1{margin:14px 0 6px;font-size:clamp(30px,7vw,48px)} h1 span{color:var(--gold)} .subtitle{color:var(--muted);margin:0}
+    .panel{background:linear-gradient(145deg,#202641,#171b30);border:1px solid #ffffff18;border-radius:26px;padding:clamp(20px,5vw,36px);box-shadow:0 20px 70px #0005}
+    .eyebrow{text-align:center;color:var(--gold);font-size:13px;letter-spacing:1px;margin-bottom:15px}
+    .card{position:relative;overflow:hidden;min-height:250px;border-radius:20px;padding:30px 22px;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;background:linear-gradient(145deg,#36305f,#1c2441 58%,#2b2145);border:2px solid #e9c56c;box-shadow:inset 0 0 0 6px #ffffff08}
+    .card:before,.card:after{content:"✦";position:absolute;color:#f4c96b66;font-size:34px}.card:before{top:14px;right:18px}.card:after{bottom:14px;left:18px}
+    .tag{font-size:12px;color:#ffe4a0;border:1px solid #f4c96b77;border-radius:99px;padding:7px 13px;margin-bottom:22px}
+    #question{font-size:clamp(23px,5vw,34px);line-height:1.7;font-weight:bold;max-width:560px}
+    .actions{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:22px}
+    button{font:inherit;font-weight:bold;border:0;border-radius:13px;padding:14px 23px;cursor:pointer;transition:transform .15s,filter .15s}
+    button:hover{filter:brightness(1.08);transform:translateY(-2px)}button:focus-visible,a:focus-visible{outline:3px solid white;outline-offset:3px}
+    .primary{background:linear-gradient(120deg,#f6d77f,#eab84d);color:#242033}.secondary{background:#ffffff12;color:var(--text);border:1px solid #ffffff25}
+    .hint{text-align:center;color:var(--muted);font-size:13px;line-height:1.8;margin:18px 0 0}
+    footer{text-align:center;color:var(--muted);font-size:13px;margin-top:22px}footer a{color:var(--gold);text-decoration:none}footer a:hover{text-decoration:underline}
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div class="logo" aria-hidden="true">؟</div>
+      <h1>ماذا <span>لو؟</span></h1>
+      <p class="subtitle">أسئلة غير متوقعة… وإجابات تكشف خيالك!</p>
+    </header>
+    <section class="panel" aria-label="لعبة ماذا لو">
+      <div class="eyebrow">✦ اسحب سؤالًا وابدأ التحدي ✦</div>
+      <div class="card" aria-live="polite">
+        <div class="tag" id="category">سؤال خيالي</div>
+        <div id="question">ماذا لو قدرت تسافر لأي مكان في العالم في ثانية واحدة؟ هتروح فين وليه؟</div>
+      </div>
+      <div class="actions">
+        <button class="primary" id="next">اسحب كارت جديد ✨</button>
+        <button class="secondary" id="reset">ابدأ من الأول ↻</button>
+      </div>
+      <p class="hint">اقرأ السؤال بصوت عالي، وخلي كل لاعب يشارك إجابته.<br>اللعبة دي للتسلية مع الأصدقاء والعائلة.</p>
+    </section>
+    <footer>
+      <p>© <span id="year"></span> ماذا لو؟ — جميع الحقوق محفوظة.</p>
+      <a href="privacy-policy.html">سياسة الخصوصية</a>
+    </footer>
+  </main>
+  <script>
+    const cards = [
+      ["سؤال خيالي","ماذا لو قدرت تسافر لأي مكان في العالم في ثانية واحدة؟ هتروح فين وليه؟"],
+      ["تحدي الأصدقاء","ماذا لو لازم تعيش يوم كامل من غير موبايل؟ هتعمل إيه؟"],
+      ["اختيار صعب","ماذا لو تقدر تتعلم مهارة واحدة فورًا؟ هتختار إيه؟"],
+      ["عالم مختلف","ماذا لو الحيوانات قدرت تتكلم لمدة يوم؟ هتسأل حيوان إيه؟"],
+      ["قوة خارقة","ماذا لو عندك قوة خارقة لمدة 24 ساعة؟ هتستخدمها في إيه؟"],
+      ["موقف مضحك","ماذا لو كل اللي بتفكر فيه ظهر مكتوب فوق رأسك لمدة ساعة؟"],
+      ["ذكريات","ماذا لو تقدر تعيش يوم واحد من الماضي مرة تانية؟ هتختار أنهي يوم؟"],
+      ["المستقبل","ماذا لو تقدر تشوف اختراع واحد من المستقبل؟ تحب تشوف إيه؟"],
+      ["قرار جريء","ماذا لو تقدر تبدأ هواية جديدة من النهارده؟ هتختار إيه؟"],
+      ["خيال واسع","ماذا لو صحيت ولقيت نفسك بطل لعبة فيديو؟ هتكون بطل أنهي نوع لعبة؟"],
+      ["الأصدقاء","ماذا لو أصحابك خططوا ليوم كامل ليك؟ تحب اليوم ده يكون عامل إزاي؟"],
+      ["عالم سحري","ماذا لو عندك باب سحري يفتح على مكان آمن بتحبه؟ هيكون فين؟"]
+    ];
+    let remaining = [...cards];
+    const question = document.getElementById("question");
+    const category = document.getElementById("category");
+    function drawCard(){
+      if(!remaining.length) remaining = [...cards];
+      const index = Math.floor(Math.random()*remaining.length);
+      const [label,text] = remaining.splice(index,1)[0];
+      category.textContent = label;
+      question.textContent = text;
+    }
+    document.getElementById("next").addEventListener("click",drawCard);
+    document.getElementById("reset").addEventListener("click",()=>{remaining=[...cards];drawCard();});
+    document.getElementById("year").textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
